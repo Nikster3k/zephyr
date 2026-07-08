@@ -78,6 +78,15 @@ int mfd_npm2100_set_timer(const struct device *dev, uint32_t time_ms,
 int mfd_npm2100_start_timer(const struct device *dev);
 
 /**
+ * @brief Stop npm2100 timer
+ *
+ * @param dev npm2100 mfd device
+ * @retval 0 If successful
+ * @retval -errno In case of any bus error (see i2c_write_dt())
+ */
+int mfd_npm2100_stop_timer(const struct device *dev);
+
+/**
  * @brief npm2100 full power reset
  *
  * @param dev npm2100 mfd device

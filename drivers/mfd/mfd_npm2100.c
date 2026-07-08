@@ -20,6 +20,7 @@
 #define GPIO_CONFIG             0x80U
 #define GPIO_USAGE              0x83U
 #define TIMER_TASKS_START       0xB0U
+#define TIMER_TASKS_STOP        0xB1U
 #define TIMER_CONFIG            0xB3U
 #define TIMER_TARGET            0xB4U
 #define TIMER_STATUS            0xB7U
@@ -341,6 +342,13 @@ int mfd_npm2100_start_timer(const struct device *dev)
 	const struct mfd_npm2100_config *config = dev->config;
 
 	return i2c_reg_write_byte_dt(&config->i2c, TIMER_TASKS_START, 1U);
+}
+
+int mfd_npm2100_stop_timer(const struct device *dev)
+{
+	const struct mfd_npm2100_config *config = dev->config;
+
+	return i2c_reg_write_byte_dt(&config->i2c, TIMER_TASKS_STOP, 1U);
 }
 
 int mfd_npm2100_reset(const struct device *dev)
