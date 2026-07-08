@@ -41,6 +41,7 @@
 #define SHPHLD_RESISTOR_PULLDOWN 0x02U
 #define SHPHLD_CURR_MASK         0x0CU
 #define SHPHLD_PULL_ENABLE       0x10U
+#define SHPHLD_DEBOUNCE_MASK     0x0EU
 
 #define WAKEUP_EDGE_FALLING    0x00U
 #define WAKEUP_EDGE_RISING     0x01U
@@ -82,6 +83,7 @@ struct mfd_npm2100_config {
 	gpio_flags_t shiphold_flags;
 	uint8_t shiphold_longpress;
 	uint8_t shiphold_current;
+	uint8_t shiphold_debounce;
 	uint8_t shiphold_hibernate_wakeup;
 };
 
@@ -238,6 +240,16 @@ static int config_shphold(const struct device *dev)
 	}
 
 	ret = i2c_reg_write_byte_dt(&config->i2c, SHPHLD_WAKEUP, reg);
+	if (ret < 0) {
+		return ret;
+	}
+
+	reg = config->shiphold_debounce;
+	if (reg > 1) {
+		reg = (((reg - 1) << 1) | 1);
+	}
+
+	ret = i2c_reg_write_byte_dt(&config->i2c, SHPHLD_DEBOUNCE_CONFIG, reg);
 	if (ret < 0) {
 		return ret;
 	}
@@ -436,6 +448,7 @@ int mfd_npm2100_configure_shphld_debounce(const struct device *dev, enum mfd_npm
 			DT_INST_PROP_OR(inst, shiphold_flags, (GPIO_ACTIVE_LOW | GPIO_PULL_UP)),   \
 		.shiphold_longpress = DT_INST_ENUM_IDX_OR(inst, shiphold_longpress, 0),            \
 		.shiphold_current = DT_INST_ENUM_IDX_OR(inst, shiphold_current, 0),                \
+		.shiphold_debounce = DT_INST_ENUM_IDX_OR(inst, shiphold_debounce, 0),              \
 		.shiphold_hibernate_wakeup = DT_INST_PROP_OR(inst, shiphold_hibernate_wakeup, 0),  \
 	};                                                                                         \
                                                                                                    \

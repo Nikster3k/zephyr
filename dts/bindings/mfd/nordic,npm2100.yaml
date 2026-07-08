@@ -70,3 +70,18 @@ properties:
     - "high"
     description: |
       Configure behaviour of shiphold pull-up current
+
+  shiphold-debounce:
+    type: int
+    enum:
+    - 0
+    - 10
+    - 30
+    - 60
+    - 100
+    - 300
+    - 600
+    - 1000
+    - 3000
+    description: |
+        Configure debounce time in ms for SHPHLD pin when exiting Hibernate or Hibernate_PT modes
