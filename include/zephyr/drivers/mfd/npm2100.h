@@ -122,7 +122,7 @@ int mfd_npm2100_reset(const struct device *dev);
  * without boosting. This lowers the power consumption of the pmic when hibernate mode is active.
  *
  * @param dev npm2100 mfd device
- * @param time_ms timer value in ms. Set to 0 to disable timer.
+ * @param time_ms timer value in ms. Set to 0 to skip timer configuration.
  * @param pass_through set to use pass-through hibernate mode.
  * @return 0 on success, negative errno value on failure (see i2c_write_dt()).
  * @retval -EINVAL Time value is too large.
