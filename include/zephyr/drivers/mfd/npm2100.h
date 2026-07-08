@@ -54,6 +54,26 @@ enum mfd_npm2100_timer_mode {
 	NPM2100_TIMER_MODE_WAKEUP,
 };
 
+/* Debounce mode encoding:
+ *   Bit 0:   Debounce enable (0=off, 1=on)
+ *   Bits 3:1: Time constant encoded as: 0b001=10ms, 0b011=30ms,
+ *             0b101=60ms, 0b111=100ms, 0b1001=300ms, 0b1011=600ms,
+ *             0b1101=1000ms, 0b1111=3000ms
+ */
+enum mfd_npm2100_shphld_debounce_mode {
+	NPM2100_SHPHLD_DEBOUNCE_OFF = 0x00,
+
+	/* Debounce enabled with time constants */
+	NPM2100_SHPHLD_DEBOUNCE_10MS  = 0x01,
+	NPM2100_SHPHLD_DEBOUNCE_30MS  = 0x03,
+	NPM2100_SHPHLD_DEBOUNCE_60MS  = 0x05,
+	NPM2100_SHPHLD_DEBOUNCE_100MS = 0x07,
+	NPM2100_SHPHLD_DEBOUNCE_300MS = 0x09,
+	NPM2100_SHPHLD_DEBOUNCE_600MS = 0x0B,
+	NPM2100_SHPHLD_DEBOUNCE_1000MS = 0x0D,
+	NPM2100_SHPHLD_DEBOUNCE_3000MS = 0x0F,
+};
+
 /**
  * @brief Write npm2100 timer register
  *
@@ -127,6 +147,21 @@ int mfd_npm2100_add_callback(const struct device *dev, struct gpio_callback *cal
  * @return 0 on success, negative errno value on failure.
  */
 int mfd_npm2100_remove_callback(const struct device *dev, struct gpio_callback *callback);
+
+/**
+ * @brief Configure SHPHLD debounce for Hibernate exit
+ *
+ * Configures debounce time for the SHPHLD pin when triggering
+ * exit from Hibernate or Hibernate_PT modes.
+ * Set mode to NPM2100_SHPHLD_DEBOUNCE_OFF to disable.
+ *
+ * @param dev npm2100 mfd device
+ * @param mode Debounce mode
+ * @retval 0 If successful
+ * @retval -errno In case of any bus error (see i2c_write_dt())
+ */
+int mfd_npm2100_shphld_debounce_config(const struct device *dev,
+					 enum mfd_npm2100_shphld_debounce_mode mode);
 
 /** @} */
 

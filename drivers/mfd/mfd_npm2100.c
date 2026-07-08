@@ -28,6 +28,7 @@
 #define SHPHLD_SHPHLD           0xC2U
 #define HIBERNATE_TASKS_HIBER   0xC8U
 #define HIBERNATE_TASKS_HIBERPT 0xC9U
+#define SHPHLD_DEBOUNCE_CONFIG  0xCAU
 #define RESET_TASKS_RESET       0xD0U
 #define RESET_BUTTON            0xD2U
 #define RESET_PIN               0xD3U
@@ -411,6 +412,13 @@ int mfd_npm2100_remove_callback(const struct device *dev, struct gpio_callback *
 	struct mfd_npm2100_data *data = dev->data;
 
 	return gpio_manage_callback(&data->callbacks, callback, false);
+}
+
+int mfd_npm2100_configure_shphld_debounce(const struct device *dev, enum mfd_npm2100_shphld_debounce_mode mode)
+{
+	const struct mfd_npm2100_config *config = dev->config;
+
+	return i2c_reg_write_byte_dt(&config->i2c, SHPHLD_DEBOUNCE_CONFIG, mode);
 }
 
 #define MFD_NPM2100_DEFINE(inst)                                                                   \
